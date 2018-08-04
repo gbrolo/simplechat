@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="EN">
+    <head>
+        <link rel="stylesheet" type="text/css" href="./res/css/index.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script type="text/javascript" src="./res/js/apiConnections.js"></script>
+        
+        <title>Chat Hub</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            getChats();    
+        </script>
+        <div class="chat-box-area">
+            <input class="box" type="text" name="id-box" id="id-box" placeholder="ID">
+            <input class="box" type="text" name="nick-box" id="nick-box" placeholder="Nickname">
+            <input class="box" type="text" name="text-box" id="text-box" placeholder="Write your message">
+            <button class="round-btn" onclick="submitMessage()">
+                <i class="fa fa-location-arrow"></i>
+            </button>
+        </div>
+        
+        <div class="chat" id="chat-area">
+
+        </div>
+    </body>
+</html>
