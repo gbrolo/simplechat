@@ -13,8 +13,8 @@ body {
 .chat {
     padding: 20px;
     margin-top: 60px;
-    margin-bottom: 20px;
-    width: 60%;
+    margin-bottom: 120px;
+    width: 70%;
     background-color: #1e1e1e;
     border-radius: 10px;
 }

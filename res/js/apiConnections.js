@@ -29,14 +29,31 @@ function getChats() {
                 var node = document.createTextNode(data[i].nick + ": " + data[i].text);
 
                 div.appendChild(node);
+
+                // check if text has urls
+                var urls = getUrls(data[i].text);
+
+                if (urls.length > 0) {
+                    for (var j = 0; j < urls.length; j++) {
+                        var url = urls[j];
+                        var frame = document.createElement("iframe");
+                        frame.setAttribute("id", url);
+                        frame.setAttribute("src", url);
+                        frame.style.marginTop = "10px";
+                        frame.style.borderRadius = "5px";
+
+                        div.appendChild(frame);
+                    }
+                }
+
                 chat.appendChild(div);
             }
         })
 }
 
-// submits message
-function submitMessage() {
-    var student_id = parseInt(document.getElementById("id-box").value);
+// POST: sends the message
+function sendMessage() {
+    var student_id = document.getElementById("id-box").value;
     var text = document.getElementById("text-box").value;
     var nick = document.getElementById("nick-box").value;
 
@@ -51,29 +68,41 @@ function submitMessage() {
         if (text.length <= 140) {
             // continue
             console.log('preparing to send message');
-            postMessage('http://34.210.35.174:7000', {student_id, text, nick});
+            
+            // POST request
+            var fd = new FormData();
+
+            fd.append("student_id", student_id);
+            fd.append("text", text);
+            fd.append("nick", nick);
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "http://34.210.35.174:7000");
+            request.send(fd);
+            
+            // refresh chat list
+            getChats();
+
         } else {
             // more than 140 chars
             alert("Text field with more than 140 characters.")
         }
-    }
-    
+    }    
+
 }
 
-function postMessage(url, data) {
-    console.log(JSON.stringify(data));
-    return fetch(url, {
-        credentials: 'include',
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {}       
-    })
-    .then(function(response) {
-        console.log('before return');
-        return response.json();
-        getChats();      
-    })
-    .catch(function(error) {
-        console.log(error);
-    })
+// checks if there are any urls inside text. Returns an array of found urls.
+function getUrls(text) {
+    var regex = /(https?:\/\/[^\s]+)/g;
+    var rawtext = (text || '').toString();
+    var urls = [];
+    var url;
+    var matches = [];
+
+    while ((matches = regex.exec(rawtext)) !== null) {
+        var matchUrl = matches[0];
+        urls.push(matchUrl);
+    }
+
+    return urls;
 }
